@@ -175,3 +175,199 @@ end main
 ```
 Here it has some very important code portion. In input n1 `mov bl, al` means when take n1 input subtract `48` to match assci value. In `bl` reserve the `character` and `n1` reserve `value`. It also do in input n2 portion. 
 After adding portion add `48` to give the value.
+
+# Subtraction with Addition
+### Code
+```
+.model smnall
+.stack 100h
+
+.data
+    n1 db ?
+    n2 db ?
+
+
+.code       
+main proc
+     mov ax, @data
+     mov ds, ax 
+     
+     ;input n1
+     mov ah, 1
+     int 21h 
+     mov bl, al
+     sub al, 48
+     mov n1, al
+     
+     ;input n2
+     mov ah,1
+     int 21h 
+     mov bh, al
+     sub al, 48
+     mov n2, al
+     
+     ;print newline
+     mov ah, 2
+     mov dl, 10
+     int 21h
+     mov dl, 13
+     int 21h
+     
+     ;print n1
+     mov ah, 2
+     mov dl, bl
+     int 21h
+     
+     ;print + 
+     mov ah, 2
+     mov dl, '+'
+     int 21h 
+     
+     ;print n2
+     mov ah, 2
+     mov dl, bh
+     int 21h  
+     
+     ;print =
+     mov ah, 2
+     mov dl, '='
+     int 21h
+     
+     ;add n1 + n2
+     mov dl, n1
+     add dl, n2
+     add dl, 48  
+     mov ah, 2
+     int 21h   
+     
+     ;print newline
+     mov ah, 2
+     mov dl, 10
+     int 21h
+     mov dl, 13
+     int 21h
+     
+     ;print n1
+     mov ah, 2
+     mov dl, bl
+     int 21h
+     
+     ;print - 
+     mov ah, 2
+     mov dl, '-'
+     int 21h 
+     
+     ;print n2
+     mov ah, 2
+     mov dl, bh
+     int 21h  
+     
+     ;print =
+     mov ah, 2
+     mov dl, '='
+     int 21h
+     
+     ;sub n1 - n2
+     mov dl, n1
+     sub dl, n2
+     add dl, 48  
+     mov ah, 2
+     int 21h
+        
+     mov ax, 4ch
+     int 21h
+    
+main endp
+end main
+```
+This describtion is like as addition part. just change `sub` keyword replace `add` keyword.
+
+# Small Number between two number
+
+### Theory:
+we can use these type of keyword to solve this type of comparing problem solve.
+There are:
+`jmp` = unconditonal jump
+`je` = jump if equal
+`jne` = jump if not equal
+`jg` = jump if greater
+`jge` = jump if greater or equal
+`jl` = jump if less
+`jle` = jump if less or equal
+`cmp` = compare
+
+>Here `include'emu8086.inc` is the header file of Assembly language.
+
+### Code
+```
+include 'emu8086.inc'
+
+.model small
+.stack 100h
+
+.data     
+    in1 db "Enter first number:$"
+    in2 db "Enter second number:$" 
+    n1 db ?
+    n2 db ?
+    msg db " is the smallest number.$"
+    
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+    
+    mov ah,9
+    lea dx,in1
+    int 21h
+    
+    mov ah, 1
+    int 21h
+    mov n1, al
+    
+    printn ''
+    
+    mov ah,9
+    lea dx,in2
+    int 21h
+    
+    mov ah, 1
+    int 21h
+    mov n2, al
+    
+    printn ''
+    
+    mov bl,n1
+    mov bh,n2
+    cmp bl,bh
+    jle num1
+    jmp num2
+    
+    num1:
+        mov ah,2
+        mov dl,n1
+        int 21h
+        
+        jmp endoffile
+    
+    num2:
+        mov ah,2
+        mov dl,n2
+        int 21h
+        
+        jmp endoffile
+    
+    endoffile:
+        mov ah,9
+        lea dx,msg
+        int 21h
+    
+    mov ax,4ch
+    int 21h
+    
+main endp
+end main
+```
+
+Here `printn ''` is used for newline and we can use this for `include 'emu8086.inc'` header file. Here must remember it that when we solve this kind of problem we should use register. 
